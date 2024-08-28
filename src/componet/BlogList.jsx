@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Text,
-  Image,
+  Image, 
   Heading,
   VStack,
   Spinner,
