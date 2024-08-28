@@ -17,6 +17,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { Loading } from '../redux/slices/AuthSlice'
+import { setUser,  } from "../redux/slices/UserSlice";
 
 // const auth = getAuth(app);
 
@@ -41,13 +42,14 @@ function Login() {
 
   const handleLogin = async (data) => {
     const { email, password } = data;
+    
     try {
       dispatch(Loading(true));
       await signInWithEmailAndPassword(auth, email, password)
         .then((res) => {
           console.log(res, "login");
-          let {_tokenResponse} = res
-          localStorage.set('_token',_tokenResponse.idToken)
+          dispatch(setUser(res?.user?.email))
+         localStorage.setItem('user',JSON.stringify(res.user))
           reset();
           toast({
             title: "user login Successfuly",
@@ -59,6 +61,7 @@ function Login() {
           navigate("/");
         })
         .catch((err) => {
+          dispatch(Loading(false));
           toast({
             title: err.code,
             status: "error",

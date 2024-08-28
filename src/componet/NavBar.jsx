@@ -18,7 +18,10 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { getAuth } from "firebase/auth";
 const Links = [
   {
     title: "Home",
@@ -37,7 +40,16 @@ const Links = [
 
 export default function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [user,setUser] = useState(null)
 
+  const fetchUser = async () =>{
+    let user = localStorage.getItem('user')
+    // console.log(JSON.parse(user))
+    user && setUser(JSON.parse(user))
+  }
+  useEffect(()=>{
+    fetchUser()
+  },[])
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} w={"100%"}>
@@ -45,7 +57,7 @@ export default function NavBar() {
           h={16}
           alignItems={"center"}
           justifyContent={"space-between"}
-          border={"1px solid green"}
+          // border={"1px solid green"}
         >
           <IconButton
             size={"md"}
@@ -63,7 +75,7 @@ export default function NavBar() {
             fontWeight={"bold"}
             spacing={6}
             display={{ base: "none", md: "flex" }}
-            border={"1px solid green"}
+            // border={"1px solid green"}
             m={"auto"}
             textColor={"#BE5A38"}
           >
@@ -72,6 +84,7 @@ export default function NavBar() {
                 {link.title}
               </ChakraLink>
             ))}
+            <Text>Email : {user?.email}</Text>
           </HStack>
         </Flex>
 
